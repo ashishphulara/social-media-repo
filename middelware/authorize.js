@@ -1,4 +1,4 @@
-import jwt from "jsonWebTokens"
+import jwt from "jsonwebtoken";
 
 export const  verifyToken = async ( req , res, next )=>{          // next is used to continue to the next middleware
 

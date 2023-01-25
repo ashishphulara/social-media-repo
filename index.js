@@ -10,11 +10,14 @@ import path from "path"; // middleware for serving static files
 import { fileURLToPath } from "url"; // middleware for serving static files
 mongoose.set("strictQuery", true); // to enable strict query
 import authRoutes from "./routes/auth.js";
-import userRoutes from "./routes/user.js"
+import userRoutes from "./routes/user.js";
+import { verifyToken } from "./middelware/authorize.js";
 import { Register } from "./controllers/Checkauth.js"; // for authentication
+import createPost from "./routes/createPosts.js";
 import User from "./models/User.js";
+import post from "./models/post.js"
 
-// configuration
+// configuration------------------------------------------------------------------------------------------------
 
 dotenv.config(); // load environment variables from.env file
 const __fileName = fileURLToPath(import.meta.url); // get the path of the current file
@@ -31,12 +34,13 @@ app.use(cors()); // to enable cross origin resource sharing
 
 app.use("/Images", express.static(path.join(__dirName, "public/Images"))); // to serve static files
 
-// routes
+// routes ---------------------------------------------------------------------------------------------------------
 
 app.use("/auth", authRoutes); // to register a new user
-app.use("/users" , userRoutes); 
+app.use("/users", userRoutes); // for registering a new user
+app.use("/posts", postRoutes); //     for registering a new post
 
-// file storage
+// file storage ------------------------------------------------------------------------------------------------
 
 const storage = multer.diskStorage({
   // to store files
@@ -51,11 +55,14 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage }); // to parse multipart/form-data
 
-// routing with file storage
+// routing with file storage------------------------------------------------------------------------------------------------
+
 
 app.post("/checkAuth/register", upload.single("image"), Register); // for registering a new user , upload.single will upload a single file locally .
+app.post("/posts", verifyToken, upload.single("image"), createPost); // for registering a new post, upload.single will upload a single file locally.
 
-// connect to mongodb
+// connect to mongodb------------------------------------------------------------------------------------------------
+
 const PORT = process.env.PORT || 5000; // to get the port of the server
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -66,5 +73,3 @@ mongoose
     app.listen(PORT, () => console.log(`Server is at port : ${PORT}`));
   })
   .catch((error) => console.log(`${error} : did not connect`));
-
-

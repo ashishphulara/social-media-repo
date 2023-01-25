@@ -1,7 +1,7 @@
-import getUsers from "../controllers/getUsers";
-import router from "../routes/user";
+import getUsers from "../controllers/getUsers.js";
+import router from "../routes/user.js";
 
-export const getUser = async (req,res)=>{
+export const getUsers = async (req,res)=>{
     try{
         const {id} = req.query;
         const user = await getUsers.findById(id);
@@ -28,7 +28,7 @@ export const  getUserFriends = async (req,res)=>{
 }
 }
 
-// update a user
+// update a user------------------------------------------------------------------------------------------------
 
 const addRemoveFriend = async (req,res)=>{
     try{

@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import user from "../models/User.js";
 
-// users register
+// users register------------------------------------------------------------------------------------------------
 
  export const Register = async (req, res) => {
   // for registering a new user
@@ -43,13 +43,14 @@ import user from "../models/User.js";
 };
 
 
-// logging in
+// logging in------------------------------------------------------------------------------------------------
+
 
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body; // to get the data from the request body
 
-    const user = await User.findOne({ email: email }); // to find the user by email
+    const user = await user.findOne({ email: email }); // to find the user by email
 
     if (!user) return res.status(500).json({ message: "user not found" }); // if user not found
 
